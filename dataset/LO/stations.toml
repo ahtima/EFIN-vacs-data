@@ -420,8 +420,6 @@ id = "LOXT_APP"
 controlled_by = [
     "LOXT_APP",
     "LOVV_M_CTR",
-    "LOXT_APP",
-    "LOVV_M_CTR",
     "LOWW_N_APP",
     "LOWW_M_APP",
     "LOWW_APP",
