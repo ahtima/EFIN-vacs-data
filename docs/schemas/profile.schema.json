@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/MorpheusXAUT/vacs-data/refs/heads/main/docs/schemas/profile.schema.json",
+  "title": "vacs dataset - profile configuration",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/GeoProfile" },
+    { "$ref": "#/$defs/TabbedProfile" }
+  ],
+  "$defs": {
+    "ProfileId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Profile identifier, used to reference profile in positions configuration. Must start with your FIR's two-letter country code and be globally unique, e.g. LOVV, LOWW."
+    },
+    "StationId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Station identifier, used to reference a station from the stations configuration. Must start with your FIR's two-letter country code and be globally unique, e.g. LOWW_APP, LOVV_N1."
+    },
+    "LabelLines": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "Content of a multi-line label. Can be empty to represent a blank key.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "FlexDirection": {
+      "type": "string",
+      "enum": ["row", "col"]
+    },
+    "JustifyContent": {
+      "type": "string",
+      "enum": [
+        "flex-start",
+        "flex-end",
+        "center",
+        "space-between",
+        "space-around",
+        "space-evenly"
+      ]
+    },
+    "AlignItems": {
+      "type": "string",
+      "enum": ["flex-start", "flex-end", "center", "stretch", "baseline"]
+    },
+    "GeoPageDividerOrientation": {
+      "type": "string",
+      "enum": ["horizontal", "vertical"]
+    },
+    "ContainerSize": {
+      "type": "string",
+      "description": "Must be an integer followed by % or rem (matches ^\\d+(%|rem)$). Examples: \"100%\", \"12rem\".",
+      "pattern": "^\\d+(%|rem)$"
+    },
+    "NonNegativeNumber": {
+      "type": "number",
+      "minimum": 0
+    },
+    "PositiveNumber": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "DirectAccessKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "label": { "$ref": "#/$defs/LabelLines" },
+        "station_id": { "$ref": "#/$defs/StationId" }
+      }
+    },
+    "DirectAccessPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows", "keys"],
+      "properties": {
+        "rows": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "keys": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/DirectAccessKey" }
+        }
+      }
+    },
+    "Tab": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "page"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "page": { "$ref": "#/$defs/DirectAccessPage" }
+      }
+    },
+    "GeoPageButton": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "size"],
+      "properties": {
+        "label": {
+          "description": "Geo page button labels must be non-empty and cannot exceed 3 lines.",
+          "allOf": [{ "$ref": "#/$defs/LabelLines" }, { "minItems": 1 }]
+        },
+        "size": {
+          "$ref": "#/$defs/PositiveNumber"
+        },
+        "page": { "$ref": "#/$defs/DirectAccessPage" }
+      }
+    },
+    "GeoPageDivider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orientation", "thickness", "color"],
+      "properties": {
+        "orientation": { "$ref": "#/$defs/GeoPageDividerOrientation" },
+        "thickness": { "$ref": "#/$defs/PositiveNumber" },
+        "color": {
+          "type": "string",
+          "minLength": 1,
+          "description": "CSS color for divider line. Accepts any kind of valid CSS color, e.g. hex, RGB."
+        },
+        "oversize": { "$ref": "#/$defs/PositiveNumber" }
+      }
+    },
+    "GeoPageContainer": {
+      "type": "object",
+      "required": ["direction", "children"],
+      "properties": {
+        "direction": { "$ref": "#/$defs/FlexDirection" },
+        "height": { "$ref": "#/$defs/ContainerSize" },
+        "width": { "$ref": "#/$defs/ContainerSize" },
+        "padding": { "$ref": "#/$defs/NonNegativeNumber" },
+        "padding_left": { "$ref": "#/$defs/NonNegativeNumber" },
+        "padding_right": { "$ref": "#/$defs/NonNegativeNumber" },
+        "padding_top": { "$ref": "#/$defs/NonNegativeNumber" },
+        "padding_bottom": { "$ref": "#/$defs/NonNegativeNumber" },
+        "gap": { "$ref": "#/$defs/NonNegativeNumber" },
+        "justify_content": { "$ref": "#/$defs/JustifyContent" },
+        "align_items": { "$ref": "#/$defs/AlignItems" },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/GeoNode" }
+        }
+      }
+    },
+    "GeoNode": {
+      "oneOf": [
+        { "$ref": "#/$defs/GeoPageContainer" },
+        { "$ref": "#/$defs/GeoPageButton" },
+        { "$ref": "#/$defs/GeoPageDivider" }
+      ]
+    },
+    "GeoProfile": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/GeoPageContainer" },
+        {
+          "type": "object",
+          "required": ["id", "type"],
+          "properties": {
+            "id": { "$ref": "#/$defs/ProfileId" },
+            "type": { "const": "Geo" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "TabbedProfile": {
+      "type": "object",
+      "required": ["id", "type", "tabs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/ProfileId" },
+        "type": { "const": "Tabbed" },
+        "tabs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/Tab" }
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

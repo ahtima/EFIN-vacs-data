@@ -1,0 +1,10 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "dataset/**/profiles/*.json"
+      ],
+      "url": "./docs/schemas/profile.schema.json"
+    }
+  ]
+}
