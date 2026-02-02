@@ -1,0 +1,15 @@
+[package]
+name = "vacs-data-vatglasses"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+console = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+vacs-data-diagnostics = { workspace = true }
+vacs-protocol = { workspace = true }
+vacs-vatsim = { workspace = true }

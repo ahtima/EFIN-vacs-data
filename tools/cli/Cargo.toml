@@ -1,0 +1,16 @@
+[package]
+name = "vacs-data-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "vacs-data"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+vacs-data-diagnostics = { workspace = true }
+vacs-data-validator = { workspace = true }
+vacs-data-vatglasses = { workspace = true }
