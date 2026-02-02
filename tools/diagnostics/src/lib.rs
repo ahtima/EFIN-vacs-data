@@ -8,6 +8,7 @@ pub enum LogFormat {
 }
 
 impl LogFormat {
+    #[must_use] 
     pub const fn as_str(&self) -> &'static str {
         match self {
             LogFormat::Human => "human",
@@ -15,6 +16,7 @@ impl LogFormat {
         }
     }
 
+    #[must_use] 
     pub const fn variants() -> &'static [&'static str] {
         &["human", "github"]
     }
@@ -45,41 +47,45 @@ pub struct Logger {
 }
 
 impl Logger {
+    #[must_use] 
     pub fn new(format: LogFormat) -> Self {
         Self { format }
     }
 
+    #[must_use] 
     pub fn is_human(&self) -> bool {
         self.format == LogFormat::Human
     }
 
     pub fn info(&self, message: impl std::fmt::Display) {
         match self.format {
-            LogFormat::Human => eprintln!("{}", message),
-            LogFormat::GitHub => println!("{}", message),
+            LogFormat::Human => eprintln!("{message}"),
+            LogFormat::GitHub => println!("{message}"),
         }
     }
 
     pub fn warn(&self, message: impl std::fmt::Display) {
         match self.format {
             LogFormat::Human => {
-                eprintln!("{} {}", style("warning:").yellow().bold(), message)
+                eprintln!("{} {}", style("warning:").yellow().bold(), message);
             }
-            LogFormat::GitHub => println!("::warning::{}", message),
+            LogFormat::GitHub => println!("::warning::{message}"),
         }
     }
 
     pub fn error(&self, message: impl std::fmt::Display) {
         match self.format {
             LogFormat::Human => eprintln!("{} {}", style("error:").red().bold(), message),
-            LogFormat::GitHub => println!("::error::{}", message),
+            LogFormat::GitHub => println!("::error::{message}"),
         }
     }
 
     pub fn error_with_context(&self, context: &[String], message: impl std::fmt::Display) {
         match self.format {
             LogFormat::Human => {
-                let context_str = if !context.is_empty() {
+                let context_str = if context.is_empty() {
+                    String::new()
+                } else {
                     format!(
                         "[{}]",
                         context
@@ -88,8 +94,6 @@ impl Logger {
                             .collect::<Vec<_>>()
                             .join(" > ")
                     )
-                } else {
-                    String::new()
                 };
                 eprintln!(
                     "{}{} {}",
@@ -99,12 +103,12 @@ impl Logger {
                 );
             }
             LogFormat::GitHub => {
-                let msg = if !context.is_empty() {
-                    format!("{}: {}", context.join(" > "), message)
-                } else {
+                let msg = if context.is_empty() {
                     message.to_string()
+                } else {
+                    format!("{}: {}", context.join(" > "), message)
                 };
-                println!("::error::{}", msg);
+                println!("::error::{msg}");
             }
         }
     }
@@ -141,6 +145,7 @@ pub mod log {
         logger().error_with_context(context, message);
     }
 
+    #[must_use] 
     pub fn is_human() -> bool {
         logger().is_human()
     }

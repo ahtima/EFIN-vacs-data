@@ -509,9 +509,8 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "vacs-data-diagnostics",
- "vacs-data-euroscope",
+ "vacs-data-importer",
  "vacs-data-validator",
- "vacs-data-vatglasses",
 ]
 
 [[package]]
@@ -522,11 +521,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "vacs-data-euroscope"
+name = "vacs-data-importer"
 version = "0.1.0"
 dependencies = [
+ "console",
  "encoding_rs",
  "encoding_rs_io",
+ "serde",
+ "serde_json",
  "toml",
  "vacs-data-diagnostics",
  "vacs-protocol",
@@ -539,19 +541,6 @@ version = "0.1.0"
 dependencies = [
  "console",
  "vacs-data-diagnostics",
- "vacs-vatsim",
-]
-
-[[package]]
-name = "vacs-data-vatglasses"
-version = "0.1.0"
-dependencies = [
- "console",
- "serde",
- "serde_json",
- "toml",
- "vacs-data-diagnostics",
- "vacs-protocol",
  "vacs-vatsim",
 ]
 

@@ -1,12 +1,12 @@
-mod types;
-
-use crate::types::ParsePosition;
 use encoding_rs::WINDOWS_1252;
 use encoding_rs_io::DecodeReaderBytesBuilder;
+use std::collections::HashSet;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 use vacs_data_diagnostics::log;
+use vacs_protocol::vatsim::PositionId;
 use vacs_vatsim::FacilityType;
+use vacs_vatsim::coverage::position;
 use vacs_vatsim::coverage::position::{PositionConfigFile, PositionRaw};
 
 pub fn parse(
@@ -16,50 +16,20 @@ pub fn parse(
     overwrite: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     log::info(format_args!(
-        "Parsing EuroScope sectorfile data from {:?} to {:?}",
-        input, output
+        "Parsing EuroScope sectorfile data from {input:?} to {output:?}"
     ));
 
-    if !input.exists() {
-        log::error(format_args!("Input file {:?} does not exist", input));
-        return Err("Input file does not exist".into());
-    }
+    crate::check_input_exists(input)?;
+    crate::ensure_output_directory(output)?;
 
-    if output.exists() {
-        if !output.is_dir() {
-            log::error(format_args!("Output {:?} is not a directory", output));
-            return Err("Output is not a directory".into());
-        }
-    } else if let Err(err) = std::fs::create_dir_all(output) {
-        log::error(format_args!(
-            "Failed to create output directory {:?}: {:?}",
-            output, err
-        ));
-        return Err(err.into());
-    }
-
-    let output_positions = output.join("positions.toml");
-    if output_positions.exists() {
-        if overwrite {
-            log::warn(format_args!(
-                "Overwriting existing positions output file: {:?}",
-                output_positions
-            ));
-        } else {
-            log::error(format_args!(
-                "Positions output file {:?} already exists",
-                output_positions
-            ));
-            return Err("Positions output file already exists".into());
-        }
-    }
+    let output_positions =
+        crate::check_output_file(output, "positions.toml", "Positions", overwrite)?;
 
     let file = match std::fs::File::open(input) {
         Ok(f) => f,
         Err(err) => {
             log::error(format_args!(
-                "Failed to open input file {:?}: {:?}",
-                input, err
+                "Failed to open input file {input:?}: {err:?}"
             ));
             return Err(err.into());
         }
@@ -80,7 +50,7 @@ pub fn parse(
         let trimmed = line.trim();
 
         // Empty line or comment
-        if trimmed.is_empty() || trimmed.starts_with(";") {
+        if trimmed.is_empty() || trimmed.starts_with(';') {
             continue;
         }
         // Start of positions section
@@ -89,7 +59,7 @@ pub fn parse(
             continue;
         }
         // Start of next section after leaving positions section
-        if in_positions_section && trimmed.starts_with("[") && trimmed.ends_with("]") {
+        if in_positions_section && trimmed.starts_with('[') && trimmed.ends_with(']') {
             break;
         }
         // Ignore positions outside specified prefixes
@@ -115,19 +85,40 @@ pub fn parse(
     let serialized_positions = match toml::to_string_pretty(&PositionConfigFile { positions }) {
         Ok(s) => s,
         Err(err) => {
-            log::error(format_args!("Failed to serialize positions: {:?}", err));
+            log::error(format_args!("Failed to serialize positions: {err:?}"));
             return Err(err.into());
         }
     };
 
-    if let Err(err) = std::fs::write(&output_positions, serialized_positions) {
-        log::error(format_args!(
-            "Failed to write positions output file {:?}: {:?}",
-            output_positions, err
-        ));
-        return Err(err.into());
-    }
+    crate::write_output_file(&output_positions, &serialized_positions, "Positions")?;
 
-    log::info(format_args!("Wrote output files to {:?}", output));
+    log::info(format_args!("Wrote output files to {output:?}"));
     Ok(())
+}
+
+trait ParsePosition: Sized {
+    type Error;
+    fn from_ese_line(line: &str) -> Result<Self, Self::Error>;
+}
+
+impl ParsePosition for position::PositionRaw {
+    type Error = String;
+    fn from_ese_line(line: &str) -> Result<Self, Self::Error> {
+        let parts: Vec<&str> = line.split(':').collect();
+        if parts.len() < 7 {
+            return Err("Invalid format".to_string());
+        }
+
+        let Ok(facility_type) = parts[6].parse() else {
+            return Err("Invalid facility type".to_string());
+        };
+
+        Ok(Self {
+            id: PositionId::from(parts[0]),
+            frequency: parts[2].to_string(),
+            prefixes: HashSet::from([parts[5].to_string()]),
+            facility_type,
+            profile_id: None,
+        })
+    }
 }

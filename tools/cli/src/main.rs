@@ -38,7 +38,7 @@ pub fn main() {
                 std::process::exit(2);
             };
 
-            if vacs_data_vatglasses::parse(&input, &output, overwrite).is_err() {
+            if vacs_data_importer::vatglasses::parse(&input, &output, overwrite).is_err() {
                 std::process::exit(1);
             }
         }
@@ -63,7 +63,8 @@ pub fn main() {
             };
             let prefixes = prefixes.unwrap_or_default();
 
-            if vacs_data_euroscope::parse(&input, &output, &prefixes, overwrite).is_err() {
+            if vacs_data_importer::euroscope::parse(&input, &output, &prefixes, overwrite).is_err()
+            {
                 std::process::exit(1);
             }
         }

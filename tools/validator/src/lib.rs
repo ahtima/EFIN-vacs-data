@@ -5,13 +5,13 @@ use vacs_vatsim::coverage::CoverageError;
 use vacs_vatsim::coverage::network::Network;
 
 pub fn validate(input: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
-    log::info(format_args!("Validating dataset: {:?}", input));
+    log::info(format_args!("Validating dataset: {input:?}"));
 
     if !input.exists() {
-        log::error(format_args!("Input {:?} does not exist", input));
+        log::error(format_args!("Input {input:?} does not exist"));
         return Err("Input does not exist".into());
     } else if !input.is_dir() {
-        log::error(format_args!("Input {:?} is not a directory", input));
+        log::error(format_args!("Input {input:?} is not a directory"));
         return Err("Input is not a directory".into());
     }
 
@@ -35,11 +35,11 @@ pub fn validate(input: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
                             format!(
                                 "referenced {} {} does not exist",
                                 field,
-                                style(format!("`{}`", ref_id)).cyan()
+                                style(format!("`{ref_id}`")).cyan()
                             )
                         }
                         CoverageError::Structure(StructureError::Duplicate { entity, id }) => {
-                            format!("duplicate {} {}", entity, style(format!("`{}`", id)).cyan())
+                            format!("duplicate {} {}", entity, style(format!("`{id}`")).cyan())
                         }
                         _ => inner_error.to_string(),
                     };
@@ -51,7 +51,7 @@ pub fn validate(input: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
 
             return Err("Dataset validation error".into());
         }
-    };
+    }
 
     Ok(())
 }

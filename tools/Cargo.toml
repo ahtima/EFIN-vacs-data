@@ -1,6 +1,7 @@
 [workspace]
 resolver = "3"
-members = ["cli", "diagnostics", "euroscope", "validator", "vatglasses"]
+members = ["cli", "diagnostics", "importer", "validator"]
+
 
 [workspace.package]
 version = "0.1.0"
@@ -20,8 +21,11 @@ toml = { version = "0.9.11", features = ["serde"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter", "json"] }
 vacs-data-diagnostics = { path = "./diagnostics" }
-vacs-data-euroscope = { path = "./euroscope" }
+vacs-data-importer = { path = "./importer" }
 vacs-data-validator = { path = "./validator" }
-vacs-data-vatglasses = { path = "./vatglasses" }
-vacs-protocol = { git = "https://github.com/MorpheusXAUT/vacs", branch = "v2", default-features = false, features = ["vatsim"] }
-vacs-vatsim = { git = "https://github.com/MorpheusXAUT/vacs", branch = "v2", default-features = false, features = ["coverage"] }
+vacs-protocol = { git = "https://github.com/MorpheusXAUT/vacs", branch = "v2", default-features = false, features = [
+    "vatsim",
+] }
+vacs-vatsim = { git = "https://github.com/MorpheusXAUT/vacs", branch = "v2", default-features = false, features = [
+    "coverage",
+] }
