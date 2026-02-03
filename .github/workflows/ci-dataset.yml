@@ -34,4 +34,4 @@ jobs:
           workspaces: "tools -> target"
 
       - name: Validate dataset
-        run: cargo run --release --locked --bin vacs-data --manifest-path tools/Cargo.toml -- --log-format github validate dataset/
+        run: cargo run --quiet --release --locked --bin vacs-data --manifest-path tools/Cargo.toml -- --log-format github validate dataset/
