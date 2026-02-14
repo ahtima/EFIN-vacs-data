@@ -241,12 +241,6 @@ controlled_by = [
 ]
 
 [[stations]]
-id = "EFRO_ARR"
-controlled_by = [
-    "EFRO_R_APP",
-]
-
-[[stations]]
 id = "EFTP_COR"
 controlled_by = [
     "EFTP_APP",
@@ -339,7 +333,7 @@ controlled_by = [
 [[stations]]
 id = "EFLP_TWR"
 controlled_by = [
-    "EFLP_R_TWR",
+    "EFLP_P_TWR",
 ]
 
 [[stations]]

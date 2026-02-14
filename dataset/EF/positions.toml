@@ -65,7 +65,7 @@ profile_id="EFIN"
 [[positions]]
 id="EFIN_J_CTR"
 prefixes=["EFIN"]
-frequency="126.1"
+frequency="126.100"
 facility_type="CTR"
 profile_id="EFIN"
 
@@ -143,12 +143,6 @@ id="EFHK_W_TWR"
 prefixes=["EFHK"]
 frequency="118.850"
 facility_type="TWR"
-
-[[positions]]
-id="EFHK_GND"
-prefixes=["EFHK"]
-frequency="121.800"
-facility_type="GND"
 
 [[positions]]
 id="EFHK_GND"
