@@ -145,7 +145,7 @@ controlled_by = [
 [[stations]]
 id = "EFHK_TWR_COR"
 controlled_by = [
-    "EFHK_TWR_COR",
+    "EFHK_FMP",
     "EFHK_E_TWR",
     "EFHK_E_APP",
 ]
@@ -389,6 +389,13 @@ controlled_by = [
 id = "EFTP_GND"
 controlled_by = [
     "EFTP_GND",
+]
+
+[[stations]]
+id = "EFTU_TWR"
+controlled_by = [
+    "EFTU_TWR",
+    "EFTU_R_TWR"
 ]
 
 [[stations]]

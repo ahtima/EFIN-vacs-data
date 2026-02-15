@@ -108,7 +108,7 @@ profile_id="EFIN"
 
 # EFHK
 [[positions]]
-id="EFHK_TWR_COR"
+id="EFHK_FMP"
 prefixes=["EFHK"]
 frequency="118.600"
 facility_type="FMP"
