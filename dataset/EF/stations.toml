@@ -28,7 +28,7 @@ controlled_by = ["EFIN_F_CTR", "EFIN_D_CTR", "EFIN_C_CTR"]
 
 [[stations]]
 id = "EFIN_G"
-controlled_by = ["EFIN_G_CTR", "EFIN_D_CTR", "EFIN_C_CTR"]
+controlled_by = ["EFIN_G_CTR", "EFIN_F_CTR", "EFIN_D_CTR", "EFIN_C_CTR"]
 
 [[stations]]
 id = "EFIN_H"
@@ -92,6 +92,7 @@ controlled_by = [
 [[stations]]
 id = "EFIN_N"
 controlled_by = [
+  "EFIN_N_CTR",
   "EFIN_M_CTR",
   "EFIN_A_CTR",
   "EFIN_G_CTR",
@@ -113,7 +114,7 @@ controlled_by = [
 
 [[stations]]
 id = "EFHK_TWR_COR"
-controlled_by = ["EFHK_FMP", "EFHK_E_TWR", "EFHK_E_APP"]
+controlled_by = ["EFHK_FMP"]
 
 [[stations]]
 id = "EFHK_RE"
