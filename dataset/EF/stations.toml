@@ -165,8 +165,16 @@ id = "EFJY_COR"
 controlled_by = ["EFJY_APP", "EFJY_R_TWR"]
 
 [[stations]]
+id = "EFJY_ARR"
+controlled_by = ["EFJY_R_APP"]
+
+[[stations]]
 id = "EFKU_COR"
 controlled_by = ["EFKU_APP", "EFKU_R_TWR"]
+
+[[stations]]
+id = "EFKU_ARR"
+controlled_by = ["EFKU_R_APP"]
 
 [[stations]]
 id = "EFOU_COR"
